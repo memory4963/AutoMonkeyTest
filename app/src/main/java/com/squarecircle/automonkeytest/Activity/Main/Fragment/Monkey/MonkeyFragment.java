@@ -1,5 +1,7 @@
 package com.squarecircle.automonkeytest.Activity.Main.Fragment.Monkey;
 
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,7 +16,6 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TableRow;
 
-import com.squarecircle.automonkeytest.Activity.Main.Fragment.Env.MonkeyAdapter;
 import com.squarecircle.automonkeytest.R;
 import com.squarecircle.automonkeytest.Utils.RecyclerViewDivider;
 
@@ -45,7 +46,7 @@ public class MonkeyFragment extends Fragment {
     
     //列表是否展开
     boolean isListExpanded = false;
-    List<String> appList;
+    List<AppInfo> appList;
     MonkeyAdapter adapter;
     
     public static MonkeyFragment getInstance() {
@@ -62,13 +63,15 @@ public class MonkeyFragment extends Fragment {
         //app list recyclerView
         if (appList == null) {
             appList = new ArrayList<>();
-            // TODO: 2017/6/30 获取手机应用信息
-            PackageManager pm = getActivity().getPackageManager();
-            
+        } else {
+            appList.clear();
         }
+        getAppList();
+        
         if (adapter == null) {
             adapter = new MonkeyAdapter(getContext(), appList);
         }
+        
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
@@ -78,17 +81,35 @@ public class MonkeyFragment extends Fragment {
         return view;
     }
     
+    private void getAppList() {
+        PackageManager pm = this.getActivity().getPackageManager();
+        // Return a List of all packages that are installed on the device.
+        List<PackageInfo> packages = pm.getInstalledPackages(0);
+        for (PackageInfo packageInfo : packages) {
+            // 取得非系统应用
+            if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
+                AppInfo info = new AppInfo();
+                info.appName = packageInfo.applicationInfo.loadLabel(pm).toString();
+                info.pkgName = packageInfo.packageName;
+                info.appIcon = packageInfo.applicationInfo.loadIcon(pm);
+                // 获取该应用安装包的Intent，用于启动该应用
+                info.appIntent = pm.getLaunchIntentForPackage(packageInfo.packageName);
+                appList.add(info);
+            }
+        }
+    }
+    
     @OnClick(R.id.monkey_app_list_btn)
     void onAppListBtnOnClick(View view) {
         if (isListExpanded) {
             isListExpanded = false;
-            ((Button) view).setText("折叠");
-            listRow.setVisibility(View.VISIBLE);
+            ((Button) view).setText("展开");
+            listRow.setVisibility(View.GONE);
             
         } else {
             isListExpanded = true;
-            ((Button) view).setText("展开");
-            listRow.setVisibility(View.GONE);
+            ((Button) view).setText("折叠");
+            listRow.setVisibility(View.VISIBLE);
         }
     }
     

@@ -6,11 +6,41 @@
     >
     
     <CheckBox
+        android:id="@+id/monkey_list_cb2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:visibility="invisible"
+        />
+    
+    <ImageView
+        android:id="@+id/monkey_list_icon"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_centerVertical="true"
+        android:layout_margin="6dp"
+        android:layout_toEndOf="@id/monkey_list_cb2"
+        android:layout_toRightOf="@id/monkey_list_cb2"
+        android:contentDescription="app_icon"
+        android:src="@mipmap/ic_launcher"
+        />
+    
+    <TextView
+        android:id="@+id/monkey_list_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/monkey_list_icon"
+        android:layout_toRightOf="@id/monkey_list_icon"
+        android:text="com.squareCircle.autoMonkeyTest"
+        />
+    
+    <CheckBox
         android:id="@+id/monkey_list_cb"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:text="com.squareCircle.autoMonkeyTest"
         />
+
 
 </RelativeLayout>

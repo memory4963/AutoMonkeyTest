@@ -1,4 +1,4 @@
-package com.squarecircle.automonkeytest.Activity.Main.Fragment.Env;
+package com.squarecircle.automonkeytest.Activity.Main.Fragment.Monkey;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -20,10 +20,10 @@ public class MonkeyAdapter extends RecyclerView.Adapter<MonkeyHolder> {
     
     private Context context;
     private LayoutInflater inflater;
-    private List<String> datas;
+    private List<AppInfo> datas;
     List<Integer> selectedPos;
     
-    public MonkeyAdapter(Context context, List<String> datas) {
+    public MonkeyAdapter(Context context, List<AppInfo> datas) {
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.datas = datas;
@@ -38,6 +38,7 @@ public class MonkeyAdapter extends RecyclerView.Adapter<MonkeyHolder> {
     
     @Override
     public void onBindViewHolder(MonkeyHolder holder, final int position) {
+        AppInfo info = datas.get(position);
         //检查是否已选中
         for (Integer i : selectedPos) {
             if (i.equals(position)) {
@@ -46,7 +47,7 @@ public class MonkeyAdapter extends RecyclerView.Adapter<MonkeyHolder> {
             }
         }
         //设置文字
-        holder.checkBox.setText(datas.get(position));
+        holder.nameTv.setText(info.pkgName + "\n" + info.appName);
         //设置监听器
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
     
@@ -63,10 +64,12 @@ public class MonkeyAdapter extends RecyclerView.Adapter<MonkeyHolder> {
                 }
             }
         });
+        //设置图标
+        holder.iconIv.setImageDrawable(info.appIcon);
     }
     
     @Override
     public int getItemCount() {
-        return 0;
+        return datas.size();
     }
 }
