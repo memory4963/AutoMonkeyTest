@@ -24,11 +24,11 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
     
         setSupportActionBar(toolbar);
-        
-        
+        getSupportActionBar().setTitle("测试自动化");
     
-        tabLayout.addTab(tabLayout.newTab().setText("恶劣环境"));
-        tabLayout.addTab(tabLayout.newTab().setText("Monkey"));
+        MainPagerAdapter adapter = new MainPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(adapter);
+    
         tabLayout.setupWithViewPager(viewPager);
         
     }

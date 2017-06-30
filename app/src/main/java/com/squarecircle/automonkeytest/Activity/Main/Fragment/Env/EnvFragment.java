@@ -1,0 +1,41 @@
+package com.squarecircle.automonkeytest.Activity.Main.Fragment.Env;
+
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+
+import com.squarecircle.automonkeytest.R;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+/**
+ * Created by memory4963 on 2017/6/30.
+ */
+
+public class EnvFragment extends Fragment {
+    
+    @BindView(R.id.env_thread_num) EditText threadNumEt;
+    @BindView(R.id.env_picture_num) EditText pictureNumEt;
+    @BindView(R.id.env_cpu_interval) EditText cpuIntervalEt;
+    @BindView(R.id.env_memory_interval) EditText memoryInterValEt;
+    @BindView(R.id.env_exec_btn) Button execBtn;
+    
+    public static EnvFragment getInstance() {
+        return new EnvFragment();
+    }
+    
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_main_env, container, false);
+        ButterKnife.bind(this, view);
+        return view;
+    }
+}

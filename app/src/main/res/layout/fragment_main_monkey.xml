@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        >
+        
+        <TableRow
+            android:gravity="center"
+            >
+            
+            <TextView
+                android:gravity="end"
+                android:text="指定应用："
+                />
+            
+            <Button
+                android:id="@+id/monkey_app_list_btn"
+                android:layout_width="wrap_content"
+                android:text="展开"
+                />
+        
+        </TableRow>
+        
+        <TableRow
+            android:id="@+id/monkey_app_list_row"
+            android:gravity="center"
+            android:visibility="gone"
+            >
+            
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/monkey_monkey_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_span="2"
+                />
+        
+        </TableRow>
+        
+        <TableRow
+            android:gravity="center"
+            >
+            
+            <TextView
+                android:gravity="end"
+                android:text="测试数量(个)："
+                />
+            
+            <EditText
+                android:id="@+id/monkey_test_num"
+                android:hint="10"
+                android:inputType="number"
+                />
+        
+        </TableRow>
+        
+        <TableRow
+            android:gravity="center">
+            
+            <TextView
+                android:gravity="end"
+                android:text="事件生成间隔(毫秒)："
+                />
+            
+            <EditText
+                android:id="@+id/monkey_create_interval"
+                android:hint="300"
+                android:inputType="number"
+                />
+        
+        </TableRow>
+        
+        <TableRow
+            android:gravity="center">
+            
+            <TextView
+                android:gravity="end"
+                android:text="crash时是否停止(是)："
+                />
+            
+            <RadioGroup
+                android:id="@+id/monkey_crash_stop"
+                android:orientation="horizontal"
+                >
+                
+                <RadioButton
+                    android:id="@+id/monkey_crash_stop_yes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="是"
+                    />
+                
+                <RadioButton
+                    android:id="@+id/monkey_crash_stop_no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="否"
+                    />
+            
+            </RadioGroup>
+        
+        </TableRow>
+        
+        <TableRow
+            android:gravity="center">
+            
+            <TextView
+                android:gravity="end"
+                android:text="timeout时是否停止(是)："
+                />
+    
+            <RadioGroup
+                android:id="@+id/monkey_timeout_stop"
+                android:orientation="horizontal"
+                >
+        
+                <RadioButton
+                    android:id="@+id/monkey_timeout_stop_yes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="是"
+                    />
+        
+                <RadioButton
+                    android:id="@+id/monkey_timeout_stop_no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="否"
+                    />
+    
+            </RadioGroup>
+        
+        </TableRow>
+        
+        <TableRow
+            android:gravity="center">
+            
+            <TextView
+                android:gravity="end"
+                android:text="是否忽略许可错误(否)："
+                />
+    
+            <RadioGroup
+                android:id="@+id/monkey_permission_stop"
+                android:orientation="horizontal"
+                >
+        
+                <RadioButton
+                    android:id="@+id/monkey_permission_stop_yes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="是"
+                    />
+        
+                <RadioButton
+                    android:id="@+id/monkey_permission_stop_no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="否"
+                    />
+    
+            </RadioGroup>
+            
+        </TableRow>
+        
+        <TableRow
+            android:gravity="center">
+            
+            <TextView
+                android:gravity="end"
+                android:text="触摸事件百分比："
+                />
+            
+            <EditText
+                android:id="@+id/monkey_pct_touch"
+                android:hint="15"
+                />
+        
+        </TableRow>
+        
+        <TableRow
+            android:gravity="center">
+            
+            <TextView
+                android:gravity="end"
+                android:text="motion事件百分比："
+                />
+            
+            <EditText
+                android:id="@+id/monkey_pct_motion"
+                android:hint="10"
+                />
+        
+        </TableRow>
+        
+        <TableRow
+            android:gravity="center">
+            
+            <Button
+                android:id="@+id/monkey_exec_btn"
+                android:text="开始测试"
+                />
+            
+        </TableRow>
+    
+    </TableLayout>
+
+</ScrollView>
