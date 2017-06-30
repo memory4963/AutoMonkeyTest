@@ -16,14 +16,14 @@ import java.util.List;
  * Created by memory4963 on 2017/6/30.
  */
 
-public class MonkeyAdapter extends RecyclerView.Adapter<MonkeyHolder> {
+class MonkeyAdapter extends RecyclerView.Adapter<MonkeyHolder> {
     
     private Context context;
     private LayoutInflater inflater;
     private List<AppInfo> datas;
     List<Integer> selectedPos;
     
-    public MonkeyAdapter(Context context, List<AppInfo> datas) {
+    MonkeyAdapter(Context context, List<AppInfo> datas) {
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.datas = datas;
