@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.TableRow;
 
 import com.squarecircle.automonkeytest.R;
 import com.squarecircle.automonkeytest.Utils.RecyclerViewDivider;
+import com.squarecircle.automonkeytest.Utils.ShellInputs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +61,9 @@ public class MonkeyFragment extends Fragment {
             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main_monkey, container, false);
         ButterKnife.bind(this, view);
+        
+        //获取root权限
+        ShellInputs.executeForResult("su");
         
         //app list recyclerView
         if (appList == null) {
@@ -110,6 +115,16 @@ public class MonkeyFragment extends Fragment {
             isListExpanded = true;
             ((Button) view).setText("折叠");
             listRow.setVisibility(View.VISIBLE);
+        }
+    }
+    
+    @OnClick(R.id.monkey_exec_btn)
+    void onExecBtnOnClick(View view) {
+        
+        
+        
+        if (TextUtils.isEmpty(textNumEt.getText().toString())) {
+            
         }
     }
     
