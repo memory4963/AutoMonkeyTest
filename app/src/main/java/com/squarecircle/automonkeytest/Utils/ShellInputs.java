@@ -1,17 +1,17 @@
 package com.squarecircle.automonkeytest.Utils;
 
-import android.widget.Toast;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 
-import com.squarecircle.automonkeytest.Activity.Base.App;
+import com.squarecircle.automonkeytest.Activity.MonkeyResult.MonkeyResultActivity;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -24,15 +24,7 @@ public class ShellInputs {
     
     protected static final String TAG = "ShellInputs";
     
-    public static void execute(String command) {
-        try {
-            Process process = Runtime.getRuntime().exec(command);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    public static String executeForResult(final String command) {
+    public static void executeForResult(final String command, final Handler handler) {
         
         final String[] result = new String[1];
         
@@ -41,25 +33,27 @@ public class ShellInputs {
             @Override
             public void subscribe(@NonNull ObservableEmitter<String> e) throws Exception {
                 try {
+                    Log.d(TAG, "subscribe: " + command);
                     Process process = Runtime.getRuntime().exec(command);
-                    if (process.waitFor() != 0) {
-                        BufferedReader ie =
-                                new BufferedReader(new InputStreamReader(process.getErrorStream()));
-                        BufferedReader in =
-                                new BufferedReader(new InputStreamReader(process.getInputStream()));
-                        String error;
-                        String errors = "";
-                        while ((error = ie.readLine()) != null) {
-                            errors += (error + "\n");
-                        }
-                        String input;
-                        String inputs = "";
-                        while ((input = in.readLine()) != null) {
-                            inputs += (input + "\n");
-                        }
-                        String str = inputs.equals("") ? errors : inputs;
-                        e.onNext(str);
+                    process.waitFor();
+                    BufferedReader ie =
+                            new BufferedReader(new InputStreamReader(process.getErrorStream()));
+                    BufferedReader in =
+                            new BufferedReader(new InputStreamReader(process.getInputStream()));
+                    String error;
+                    String errors = "";
+                    while ((error = ie.readLine()) != null) {
+                        errors += (error + "\n");
                     }
+                    Log.d(TAG, "subscribe: error:" + errors);
+                    String input;
+                    String inputs = "";
+                    while ((input = in.readLine()) != null) {
+                        inputs += (input + "\n");
+                    }
+                    Log.d(TAG, "subscribe: input:" + inputs);
+                    String str = inputs.equals("") ? errors : inputs;
+                    e.onNext(str);
                 } catch (Exception err) {
                     err.printStackTrace();
                     e.onError(null);
@@ -67,27 +61,30 @@ public class ShellInputs {
             }
         })
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .subscribe(new Consumer<String>() {
                     
                     @Override
                     public void accept(@NonNull String s) throws Exception {
                         result[0] = s;
-                        if (s != null) {
-                            Toast.makeText(App.getContext(), "命令完成", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(App.getContext(), "命令失败", Toast.LENGTH_SHORT).show();
-                        }
+                        sendMessage(handler, result[0], MonkeyResultActivity.MONKEY_CALLBACK);
                     }
                 }, new Consumer<Throwable>() {
                     
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
-                        Toast.makeText(App.getContext(), "命令失败", Toast.LENGTH_SHORT).show();
                         result[0] = null;
+                        sendMessage(handler, result[0], MonkeyResultActivity.MONKEY_CALLBACK);
                     }
                 });
-        return result[0];
+    }
+    
+    static private void sendMessage(Handler handler, String result, int what) {
+        Message message = Message.obtain();
+        message.what = what;
+        message.obj = result;
+        handler.sendMessage(message);
+        Log.d(TAG, "sendMessage: " + result);
     }
     
 }

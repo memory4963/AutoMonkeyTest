@@ -14,12 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TableRow;
 
+import com.squarecircle.automonkeytest.Activity.MonkeyResult.MonkeyResultActivity;
 import com.squarecircle.automonkeytest.R;
 import com.squarecircle.automonkeytest.Utils.RecyclerViewDivider;
-import com.squarecircle.automonkeytest.Utils.ShellInputs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,11 +35,13 @@ import butterknife.OnClick;
 
 public class MonkeyFragment extends Fragment {
     
+    protected final String TAG = this.getClass().getSimpleName();
+    
     @BindView(R.id.monkey_app_list_btn) Button appListBtn;
     @BindView(R.id.monkey_app_list_row) TableRow listRow;
     @BindView(R.id.monkey_monkey_recycler) RecyclerView recyclerView;
-    @BindView(R.id.monkey_test_num) EditText textNumEt;
-    @BindView(R.id.monkey_create_interval) EditText createIntervalEt;
+    @BindView(R.id.monkey_test_num) EditText testNum;
+    @BindView(R.id.monkey_create_interval) EditText intervalEt;
     @BindView(R.id.monkey_crash_stop) RadioGroup crashRadio;
     @BindView(R.id.monkey_timeout_stop) RadioGroup timeoutRadio;
     @BindView(R.id.monkey_permission_stop) RadioGroup permissionRadio;
@@ -61,9 +64,6 @@ public class MonkeyFragment extends Fragment {
             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main_monkey, container, false);
         ButterKnife.bind(this, view);
-        
-        //获取root权限
-        ShellInputs.executeForResult("su");
         
         //app list recyclerView
         if (appList == null) {
@@ -120,12 +120,68 @@ public class MonkeyFragment extends Fragment {
     
     @OnClick(R.id.monkey_exec_btn)
     void onExecBtnOnClick(View view) {
+        MonkeyResultActivity.start(getContext(), generateCommand());
+    }
+    
+    private String generateCommand() {
         
+        String packages = "";
+        String num = " -v -v -v 100";
+        String interval = " --throttle 10";
+        String touch = " --pct-touch 15";
+        String motion = " --pct-motion 10";
+        String crash = "";
+        String timeout = "";
+        String permission = "";
         
-        
-        if (TextUtils.isEmpty(textNumEt.getText().toString())) {
-            
+        if (adapter.selectedPos.size() > 0) {
+            packages += " -p";
+            for (int i : adapter.selectedPos) {
+                packages += (" " + appList.get(i).pkgName);
+            }
         }
+        if (!TextUtils.isEmpty(testNum.getText().toString())) {
+            num = " -v -v -v " + Integer.parseInt(testNum.getText().toString());
+        }
+        if (!TextUtils.isEmpty(intervalEt.getText().toString())) {
+            interval = " --throttle " + Integer.parseInt(intervalEt.getText().toString());
+        }
+        if (!TextUtils.isEmpty(pctTouchEt.getText().toString())) {
+            touch = " --pct-touch " + Integer.parseInt(pctTouchEt.getText().toString());
+        }
+        if (!TextUtils.isEmpty(pctMotionEt.getText().toString())) {
+            motion = " --pct-motion " + Integer.parseInt(pctMotionEt.getText().toString());
+        }
+        for (int i = 0; i < crashRadio.getChildCount(); i++) {
+            RadioButton rb = (RadioButton) crashRadio.getChildAt(i);
+            if (rb.isChecked()) {
+                if (TextUtils.equals("是", rb.getText().toString())) {
+                    crash = " --ignore-crashes";
+                }
+                break;
+            }
+        }
+        for (int i = 0; i < timeoutRadio.getChildCount(); i++) {
+            RadioButton rb = (RadioButton) timeoutRadio.getChildAt(i);
+            if (rb.isChecked()) {
+                if (TextUtils.equals("是", rb.getText().toString())) {
+                    timeout = " --ignore-timeouts";
+                }
+                break;
+            }
+        }
+        for (int i = 0; i < permissionRadio.getChildCount(); i++) {
+            RadioButton rb = (RadioButton) permissionRadio.getChildAt(i);
+            if (rb.isChecked()) {
+                if (TextUtils.equals("是", rb.getText().toString())) {
+                    permission = " --ignore-security-exception";
+                }
+                break;
+            }
+        }
+        
+        return "su -c monkey" + packages + crash + timeout + permission + interval + touch + motion
+                + num;
     }
     
 }

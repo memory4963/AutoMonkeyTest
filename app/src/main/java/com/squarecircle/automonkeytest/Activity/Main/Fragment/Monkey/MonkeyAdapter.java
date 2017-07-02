@@ -56,8 +56,8 @@ class MonkeyAdapter extends RecyclerView.Adapter<MonkeyHolder> {
                 if (isChecked) {
                     selectedPos.add(position);
                 } else {
-                    for (Integer i : selectedPos) {
-                        if (i.equals(position)) {
+                    for (int i = 0; i < selectedPos.size(); i++) {
+                        if (selectedPos.get(i).equals(position)) {
                             selectedPos.remove(i);
                         }
                     }

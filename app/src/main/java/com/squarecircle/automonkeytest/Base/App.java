@@ -1,4 +1,4 @@
-package com.squarecircle.automonkeytest.Activity.Base;
+package com.squarecircle.automonkeytest.Base;
 
 import android.app.Application;
 import android.content.Context;

@@ -53,7 +53,7 @@
             
             <EditText
                 android:id="@+id/monkey_test_num"
-                android:hint="10"
+                android:hint="100"
                 android:inputType="number"
                 />
         
@@ -69,7 +69,7 @@
             
             <EditText
                 android:id="@+id/monkey_create_interval"
-                android:hint="300"
+                android:hint="10"
                 android:inputType="number"
                 />
         
@@ -80,7 +80,7 @@
             
             <TextView
                 android:gravity="end"
-                android:text="crash时是否停止(是)："
+                android:text="是否忽略crash(否)："
                 />
             
             <RadioGroup
@@ -111,7 +111,7 @@
             
             <TextView
                 android:gravity="end"
-                android:text="timeout时是否停止(是)："
+                android:text="是否忽略timeout(否)："
                 />
     
             <RadioGroup
