@@ -62,7 +62,7 @@ public class EnvResultActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         
         Intent intent = getIntent();
         threadCount = intent.getIntExtra(EnvFragment.THREAD_COUNT, 20);

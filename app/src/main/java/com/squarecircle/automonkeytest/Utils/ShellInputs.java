@@ -21,15 +21,15 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class ShellInputs {
-    
+
     protected static final String TAG = "ShellInputs";
-    
+
     public static void executeForResult(final String command, final Handler handler) {
-        
+
         final String[] result = new String[1];
-        
+
         Observable.create(new ObservableOnSubscribe<String>() {
-            
+
             @Override
             public void subscribe(@NonNull ObservableEmitter<String> e) throws Exception {
                 try {
@@ -51,8 +51,18 @@ public class ShellInputs {
                     while ((input = in.readLine()) != null) {
                         inputs += (input + "\n");
                     }
-                    Log.d(TAG, "subscribe: input:" + inputs);
-                    String str = inputs.equals("") ? errors : inputs;
+
+                    LogParser logParser = new LogParser(inputs);
+                    String droppedString = logParser.vectorToString(logParser.getDropedVector());
+                    String eventString = logParser.vectorToString(logParser.getEventVector());
+                    String exceptionString = logParser.vectorToString(logParser.getExceptionVector());
+                    String notUsingString = logParser.vectorToString(logParser.getNotUsingVector());
+                    String resultString = "dropped: " + droppedString + "\nevents: " + eventString + "\nexception: " + exceptionString + "\nnotUsing: " + notUsingString;
+
+                    String str = inputs.equals("") ? errors : resultString;
+
+                    Log.d(TAG, "subscribe: input:" + resultString);
+
                     e.onNext(str);
                 } catch (Exception err) {
                     err.printStackTrace();
@@ -63,14 +73,14 @@ public class ShellInputs {
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .subscribe(new Consumer<String>() {
-                    
+
                     @Override
                     public void accept(@NonNull String s) throws Exception {
                         result[0] = s;
                         sendMessage(handler, result[0], MonkeyResultActivity.MONKEY_CALLBACK);
                     }
                 }, new Consumer<Throwable>() {
-                    
+
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
                         result[0] = null;
@@ -78,7 +88,7 @@ public class ShellInputs {
                     }
                 });
     }
-    
+
     static private void sendMessage(Handler handler, String result, int what) {
         Message message = Message.obtain();
         message.what = what;
@@ -86,5 +96,5 @@ public class ShellInputs {
         handler.sendMessage(message);
         Log.d(TAG, "sendMessage: " + result);
     }
-    
+
 }
