@@ -41,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="number"
-            android:hint="100"
+            android:hint="10"
             />
     
     </TableRow>
@@ -53,31 +53,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CPU统计间隔(秒)："
+            android:text="统计间隔(秒)："
             />
         
         <EditText
             android:id="@+id/env_cpu_interval"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:hint="3"
-            />
-    
-    </TableRow>
-    
-    <TableRow
-        android:gravity="center"
-        >
-        
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="内存统计间隔(秒)："
-            />
-        
-        <EditText
-            android:id="@+id/env_memory_interval"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="number"

@@ -26,13 +26,11 @@ public class EnvFragment extends Fragment {
     public static final String THREAD_COUNT = "threadCount";
     public static final String PICTURE_COUNT = "pictureCount";
     public static final String CPU_INTERVAL = "CPUInterval";
-    public static final String MEMORY_INTERVAL = "memoryInterval";
     
     
     @BindView(R.id.env_thread_num) EditText threadNumEt;
     @BindView(R.id.env_picture_num) EditText pictureNumEt;
     @BindView(R.id.env_cpu_interval) EditText cpuIntervalEt;
-    @BindView(R.id.env_memory_interval) EditText memoryInterValEt;
     @BindView(R.id.env_exec_btn) Button execBtn;
     
     public static EnvFragment getInstance() {
@@ -50,7 +48,7 @@ public class EnvFragment extends Fragment {
     
             @Override
             public void onClick(View v) {
-                int threadCount = 20, pictureCount = 100, CPUInterval = 3, memoryInterval =
+                int threadCount = 20, pictureCount = 10, CPUInterval = 3, memoryInterval =
                         3;
                 if (!TextUtils.isEmpty(threadNumEt.getText().toString())) {
                     threadCount = Integer.parseInt(threadNumEt.getText().toString());
@@ -61,16 +59,12 @@ public class EnvFragment extends Fragment {
                 if (!TextUtils.isEmpty(cpuIntervalEt.getText().toString())) {
                     CPUInterval = Integer.parseInt(cpuIntervalEt.getText().toString());
                 }
-                if (!TextUtils.isEmpty(memoryInterValEt.getText().toString())) {
-                    memoryInterval = Integer.parseInt(memoryInterValEt.getText().toString());
-                }
     
                 Intent intent = new Intent(getActivity(), EnvResultActivity.class);
     
                 intent.putExtra(THREAD_COUNT, threadCount);
                 intent.putExtra(PICTURE_COUNT, pictureCount);
                 intent.putExtra(CPU_INTERVAL, CPUInterval);
-                intent.putExtra(MEMORY_INTERVAL, memoryInterval);
                 
                 startActivity(intent);
                 
