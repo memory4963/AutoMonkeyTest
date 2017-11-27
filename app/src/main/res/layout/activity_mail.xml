@@ -17,13 +17,18 @@
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="48dp">
 
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="EmailAddr:" />
+
             <EditText
                 android:id="@+id/text_email_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textEmailAddress"
-                android:text="Email Addr To Be Sent"
                 app:layout_constraintEnd_toStartOf="@+id/result_email_send" />
 
         </TableRow>
