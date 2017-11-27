@@ -1,6 +1,7 @@
 package com.squarecircle.automonkeytest.Utils;
 
 import android.content.Context;
+import android.os.Environment;
 
 import com.squarecircle.automonkeytest.Base.App;
 
@@ -16,8 +17,17 @@ import java.io.IOException;
 public class FileSaver {
     public String saveToFile(String fileName, String content) throws IOException {
         Context context = App.getContext();
-        String path = context.getFilesDir().getAbsolutePath();
-        path += '/' + fileName;
+        // String path = context.getFilesDir().getAbsolutePath();
+        String path = Environment.getExternalStorageDirectory().toString();
+
+        path += "/com.squarecircle.automonkeytest/";
+        File destDir = new File(path);
+        if (!destDir.exists()) {
+            destDir.mkdirs();
+        }
+
+        path += fileName;
+
         File file = new File(path);
         FileOutputStream outStream = new FileOutputStream(file);
         outStream.write(content.getBytes());

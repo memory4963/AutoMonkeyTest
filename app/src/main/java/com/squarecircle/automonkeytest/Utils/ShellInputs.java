@@ -60,7 +60,7 @@ public class ShellInputs {
                         filePath = fileSaver.saveToFile("error.txt", error);
                     }
 
-
+                    sendMessage(handler, filePath, MonkeyResultActivity.MONKEY_FILEPATH);
 
                     LogParser logParser = new LogParser(inputs);
                     String droppedString = logParser.vectorToString(logParser.getDropedVector());
