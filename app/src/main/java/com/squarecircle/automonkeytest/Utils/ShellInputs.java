@@ -27,6 +27,7 @@ public class ShellInputs {
     public static void executeForResult(final String command, final Handler handler) {
 
         final String[] result = new String[1];
+        final FileSaver fileSaver = new FileSaver();
 
         Observable.create(new ObservableOnSubscribe<String>() {
 
@@ -51,6 +52,15 @@ public class ShellInputs {
                     while ((input = in.readLine()) != null) {
                         inputs += (input + "\n");
                     }
+                    String filePath;
+                    //输出至文件
+                    if (!inputs.equals("")) {
+                        filePath = fileSaver.saveToFile("result.txt", inputs);
+                    } else {
+                        filePath = fileSaver.saveToFile("error.txt", error);
+                    }
+
+                    sendMessage(handler, filePath, MonkeyResultActivity.MONKEY_FILEPATH);
 
                     LogParser logParser = new LogParser(inputs);
                     String droppedString = logParser.vectorToString(logParser.getDropedVector());
