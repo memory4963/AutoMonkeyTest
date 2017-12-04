@@ -2,6 +2,7 @@ package com.squarecircle.automonkeytest.Utils;
 
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.squarecircle.automonkeytest.Activity.MonkeyResult.MonkeyResultActivity;
@@ -21,16 +22,16 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class ShellInputs {
-
+    
     protected static final String TAG = "ShellInputs";
-
+    
     public static void executeForResult(final String command, final Handler handler) {
-
+        
         final String[] result = new String[1];
         final FileSaver fileSaver = new FileSaver();
-
+        
         Observable.create(new ObservableOnSubscribe<String>() {
-
+            
             @Override
             public void subscribe(@NonNull ObservableEmitter<String> e) throws Exception {
                 try {
@@ -59,20 +60,30 @@ public class ShellInputs {
                     } else {
                         filePath = fileSaver.saveToFile("error.txt", error);
                     }
-
+                    
                     sendMessage(handler, filePath, MonkeyResultActivity.MONKEY_FILEPATH);
-
+                    
                     LogParser logParser = new LogParser(inputs);
                     String droppedString = logParser.vectorToString(logParser.getDropedVector());
                     String eventString = logParser.vectorToString(logParser.getEventVector());
-                    String exceptionString = logParser.vectorToString(logParser.getExceptionVector());
-                    String notUsingString = logParser.vectorToString(logParser.getNotUsingVector());
-                    String resultString = "dropped: " + droppedString + "\nevents: " + eventString + "\nexception: " + exceptionString + "\nnotUsing: " + notUsingString;
-
+                    String exceptionString =
+                            logParser.vectorToString(logParser.getExceptionVector());
+                    if (TextUtils.isEmpty(exceptionString)) {
+                        exceptionString = "no exception";
+                    }
+                    String seedStr = logParser.getSeed();
+                    StringBuilder activitiesBuilder = new StringBuilder("activity: ");
+                    for (IntentSaver saver : logParser.getIntentSaverVector()) {
+                        activitiesBuilder.append(saver.getCmp() + "\n");
+                    }
+                    String activities = activitiesBuilder.toString();
+//                    String notUsingString = logParser.vectorToString(logParser.getNotUsingVector());
+                    String resultString = droppedString + "\nseed: " + seedStr + "\n\n" + activities
+                            + "\nevents: " + eventString + "\nexception: " + exceptionString;
                     String str = inputs.equals("") ? errors : resultString;
-
+                    
                     Log.d(TAG, "subscribe: input:" + resultString);
-
+                    
                     e.onNext(str);
                 } catch (Exception err) {
                     err.printStackTrace();
@@ -83,14 +94,14 @@ public class ShellInputs {
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .subscribe(new Consumer<String>() {
-
+                    
                     @Override
                     public void accept(@NonNull String s) throws Exception {
                         result[0] = s;
                         sendMessage(handler, result[0], MonkeyResultActivity.MONKEY_CALLBACK);
                     }
                 }, new Consumer<Throwable>() {
-
+                    
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
                         result[0] = null;
@@ -98,7 +109,7 @@ public class ShellInputs {
                     }
                 });
     }
-
+    
     static private void sendMessage(Handler handler, String result, int what) {
         Message message = Message.obtain();
         message.what = what;
@@ -106,5 +117,5 @@ public class ShellInputs {
         handler.sendMessage(message);
         Log.d(TAG, "sendMessage: " + result);
     }
-
+    
 }
