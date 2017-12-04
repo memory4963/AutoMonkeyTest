@@ -12,6 +12,9 @@ public class LogParser {
     private Vector<String> eventVector = new Vector<>();
     private Vector<String> notUsingVector = new Vector<>();
     private Vector<String> dropedVector = new Vector<>();
+    private Vector<IntentSaver> intentSaverVector = new Vector<>();
+    private Vector<String> precentageOfEvent = new Vector<>();
+    private String seed, count, switchString;
 
     public LogParser(String inputs) throws IOException {
         String line;
@@ -31,6 +34,27 @@ public class LogParser {
             if (line.contains("//   - NOT USING main activity")) {
                 notUsingVector.add(line.substring(31, line.length()));
             }
+            if (line.contains(":Monkey: seed=")) {
+                seed = line.substring(14, line.indexOf("count="));
+                count = line.substring(line.indexOf("count=") + 6, line.length());
+            }
+            if (line.contains(":Switch: ")) {
+                switchString = line.substring(9, line.length() - 3);
+            }
+            if (line.contains("    // Allowing start of Intent { ")) {
+                IntentSaver intentSaver = new IntentSaver();
+                intentSaver.setAct(line.substring(line.indexOf("act=") + 4, line.indexOf("cat")));
+                intentSaver.setCat(line.substring(line.indexOf("cat=") + 5, line.indexOf("cmp") - 2));
+                intentSaver.setCmp(line.substring(line.indexOf("cmp=") + 4, line.indexOf(" } in package")));
+                intentSaver.setPkg(line.substring(line.indexOf(" } in package") + 13, line.length()));
+                intentSaverVector.add(intentSaver);
+            }
+            for (int tmpInt = 0; tmpInt <= 11; tmpInt++) {
+                String signToken = "//   " + tmpInt + ": ";
+                if (line.contains(signToken)) {
+                    precentageOfEvent.add(line.substring(signToken.length(), line.length()));
+                }
+            }
         }
     }
 
@@ -42,8 +66,24 @@ public class LogParser {
         return result;
     }
 
+    public String getSeed() {
+        return seed;
+    }
+
+    public String getCount() {
+        return count;
+    }
+
+    public Vector<IntentSaver> getIntentSaverVector() {
+        return intentSaverVector;
+    }
+
     public Vector<String> getDropedVector() {
         return dropedVector;
+    }
+
+    public Vector<String> getPrecentageOfEvent() {
+        return precentageOfEvent;
     }
 
     public Vector<String> getEventVector() {
